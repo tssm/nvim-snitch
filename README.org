@@ -1,0 +1,23 @@
+* Snitch
+
+Stupidly simple and non-configurable Neovim plugin that informs you about the following nasty things happening on your text:
+
+- *Lines that exceed the limit set with ~textwidth~*. It only highlights the excess portion. If you change the ~textwidth~ value, or load a buffer with a different one, the highlight will be updated.
+- *Trailing whitespace*. Supported characters are any of the non-line-break characters listed on [[https://en.wikipedia.org/wiki/Whitespace_character#Unicode][these tables]]. Some may not be necessary because Neovim shows a space-illustrating character, but I kept them for completeness.
+- *Wrong indentation*. If ~expandtab~ is set, indenting tabs are highlighted, otherwise it highlights indentig spaces. In the latter case, if ~softabstop~ is either 0 or equal to ~tabstop~, any alignment done with spaces is also highlighted. If any of these values change, the highlight is updated.
+
+Only buffers whose type (~:help buftype~) is either empty (normal files) or ~acwrite~ will be affected.
+
+** Non goals
+
+- Configurability. There's only one valid opinion here: text must follow the law, so the plugin should automatically work, always. If you don't care about long lines in a certain filetype, set the ~textwidth~ option to ~0~ in a personal filetype plugin (~:h ftplugin~) or with a filetype autocommand (~:h FileType~). In the same way, you can set [[https://tedlogan.com/techblog3.html][whatever rules you want for indentation]].
+- Modify the buffer content. The idea is that by highlighting mistakes, there's nothing to fix in the first place. If you are worried about other people not being careful, then you probably need something like [[https://editorconfig.org][Editorconfig]], or a language-specific formatter.
+
+** TODO To be implemented?
+
+- [ ] Highlight non-ASCII characters that may confuse a compiler
+
+** Inspired by
+
+- [[https://github.com/whatyouhide/vim-lengthmatters][lengthmatters]]
+- [[https://github.com/bronson/vim-trailing-whitespace][trailing-whitespace]]
