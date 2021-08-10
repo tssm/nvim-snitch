@@ -2,15 +2,19 @@
 (local opt vim.opt)
 (local w vim.w)
 
+(fn execute-if-writable-buffer [procedure]
+	(local buftype (opt.buftype:get))
+	(when (or (= buftype "") (= buftype :acwrite))
+		(procedure)))
+
 (fn highlight-lines-excess []
 	(when (not= w.lines_excess_match_id nil)
 		(pcall #(call.matchdelete w.lines_excess_match_id)))
-	(local buftype (opt.buftype:get))
-	(when (or (= buftype "") (= buftype :acwrite))
+	(execute-if-writable-buffer (fn []
 		(local textwidth (opt.textwidth:get))
 		(when (> textwidth 0)
 			(local regex (string.format "\\%%>%iv.\\+" textwidth))
-			(set w.lines_excess_match_id (call.matchadd :ColorColumn regex -1)))))
+			(set w.lines_excess_match_id (call.matchadd :ColorColumn regex -1))))))
 
 (local trailing-whitespace-regex (string.format
 	"[%s]\\+\\%%#\\@<!$"
@@ -45,25 +49,23 @@
 (fn highlight-trailing-whitespace []
 	(when (not= w.trailing_whitespace_match_id nil)
 		(pcall #(call.matchdelete w.trailing_whitespace_match_id)))
-	(local buftype (opt.buftype:get))
-	(when (or (= buftype "") (= buftype :acwrite))
+	(execute-if-writable-buffer (fn []
 		(set w.trailing_whitespace_match_id
-			(call.matchadd :ColorColumn trailing-whitespace-regex))))
+			(call.matchadd :ColorColumn trailing-whitespace-regex)))))
 
 (local spaces-indentation "^\\ \\ *")
 (local tabs-indentation "^\\t\\t*")
 (fn highlight-wrong-indentation []
 	(when (not= w.wrong_indentation_match_id nil)
 		(pcall #(call.matchdelete w.wrong_indentation_match_id)))
-	(local buftype (opt.buftype:get))
-	(when (or (= buftype "") (= buftype :acwrite))
+	(execute-if-writable-buffer (fn []
 		(local wrong-indentation-regex
 			(if (opt.expandtab:get) tabs-indentation
 				(if (or (= (opt.softtabstop:get) 0) (= (opt.softtabstop:get) (opt.tabstop:get)))
 					(.. spaces-indentation "\\|" tabs-indentation "\\zs\\ \\+")
 					spaces-indentation)))
 		(set w.wrong_indentation_match_id
-			(call.matchadd :ColorColumn wrong-indentation-regex))))
+			(call.matchadd :ColorColumn wrong-indentation-regex)))))
 
 (global Snitch {})
 (set Snitch.highlight_lines_excess highlight-lines-excess)
