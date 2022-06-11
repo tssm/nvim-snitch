@@ -75,7 +75,7 @@
 (local cmd vim.api.nvim_command)
 (cmd "augroup SnitchSetup")
 (cmd "autocmd!")
-(cmd "autocmd BufEnter,BufRead * lua Snitch.highlight_lines_excess() Snitch.highlight_trailing_whitespace() Snitch.highlight_wrong_indentation()")
+(cmd "autocmd BufEnter,BufRead,TermOpen * lua Snitch.highlight_lines_excess() Snitch.highlight_trailing_whitespace() Snitch.highlight_wrong_indentation()")
 ; OptionSet trigger a sandbox error when a modeline is used so silent! is neccessary here ☹️
 (cmd "autocmd OptionSet * silent! lua Snitch.highlight_lines_excess() Snitch.highlight_wrong_indentation()")
 (cmd "augroup END")

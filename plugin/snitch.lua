@@ -71,6 +71,6 @@ Snitch.highlight_wrong_indentation = highlight_wrong_indentation
 local cmd = vim.api.nvim_command
 cmd("augroup SnitchSetup")
 cmd("autocmd!")
-cmd("autocmd BufEnter,BufRead * lua Snitch.highlight_lines_excess() Snitch.highlight_trailing_whitespace() Snitch.highlight_wrong_indentation()")
+cmd("autocmd BufEnter,BufRead,TermOpen * lua Snitch.highlight_lines_excess() Snitch.highlight_trailing_whitespace() Snitch.highlight_wrong_indentation()")
 cmd("autocmd OptionSet * silent! lua Snitch.highlight_lines_excess() Snitch.highlight_wrong_indentation()")
 return cmd("augroup END")
