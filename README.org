@@ -8,6 +8,12 @@ Stupidly simple and non-configurable Neovim plugin that informs you about the fo
 
 Only buffers whose type (~:help buftype~) is either empty (normal files) or ~acwrite~ will be affected.
 
+The default behavior is to alert on all three conditions. If necessary, snitches may be individually disabled using the following buffer-local flags:
+
+- ~b:Snitch_disable_lines_excess~
+- ~b:Snitch_disable_trailing_whitespace~
+- ~b:Snitch_disable_wrong_indentation~
+
 ** Non goals
 
 - Configurability. There's only one valid opinion here: text must follow the law, so the plugin should automatically work, always. If you don't care about long lines in a certain filetype, set the ~textwidth~ option to ~0~ in a personal filetype plugin (~:h ftplugin~) or with a filetype autocommand (~:h FileType~). In the same way, you can set [[https://tedlogan.com/techblog3.html][whatever rules you want for indentation]].
