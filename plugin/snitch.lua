@@ -82,13 +82,16 @@ local function highlight_wrong_indentation()
     return nil
   end
 end
-Snitch = {}
-Snitch.highlight_lines_excess = highlight_lines_excess
-Snitch.highlight_trailing_whitespace = highlight_trailing_whitespace
-Snitch.highlight_wrong_indentation = highlight_wrong_indentation
-local cmd = vim.api.nvim_command
-cmd("augroup SnitchSetup")
-cmd("autocmd!")
-cmd("autocmd BufEnter,BufRead,TermOpen * lua Snitch.highlight_lines_excess() Snitch.highlight_trailing_whitespace() Snitch.highlight_wrong_indentation()")
-cmd("autocmd OptionSet * silent! lua Snitch.highlight_lines_excess() Snitch.highlight_wrong_indentation()")
-return cmd("augroup END")
+local autocmd = vim.api.nvim_create_autocmd
+local augroup = vim.api.nvim_create_augroup("snitch", {clear = true})
+local function _17_()
+  highlight_lines_excess()
+  highlight_trailing_whitespace()
+  return highlight_wrong_indentation()
+end
+autocmd({"BufEnter", "BufRead", "TermOpen"}, {callback = _17_, group = augroup})
+local function _18_()
+  highlight_lines_excess()
+  return highlight_wrong_indentation()
+end
+return autocmd("OptionSet", {callback = _18_, group = augroup})

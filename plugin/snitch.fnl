@@ -75,15 +75,21 @@
         (set w.wrong_indentation_match_id
           (call.matchadd :ColorColumn wrong-indentation-regex))))))
 
-(global Snitch {})
-(set Snitch.highlight_lines_excess highlight-lines-excess)
-(set Snitch.highlight_trailing_whitespace highlight-trailing-whitespace)
-(set Snitch.highlight_wrong_indentation highlight-wrong-indentation)
-
-(local cmd vim.api.nvim_command)
-(cmd "augroup SnitchSetup")
-(cmd "autocmd!")
-(cmd "autocmd BufEnter,BufRead,TermOpen * lua Snitch.highlight_lines_excess() Snitch.highlight_trailing_whitespace() Snitch.highlight_wrong_indentation()")
-; OptionSet trigger a sandbox error when a modeline is used so silent! is neccessary here ☹️
-(cmd "autocmd OptionSet * silent! lua Snitch.highlight_lines_excess() Snitch.highlight_wrong_indentation()")
-(cmd "augroup END")
+(let
+  [autocmd vim.api.nvim_create_autocmd
+   augroup (vim.api.nvim_create_augroup :snitch {:clear true})]
+  (autocmd
+    [:BufEnter :BufRead :TermOpen]
+    {:callback
+     (fn []
+       (highlight-lines-excess)
+       (highlight-trailing-whitespace)
+       (highlight-wrong-indentation))
+     :group augroup})
+  (autocmd
+    :OptionSet
+    {:callback
+     (fn []
+       (highlight-lines-excess)
+       (highlight-wrong-indentation))
+     :group augroup}))
